@@ -8,12 +8,17 @@ def scan_devices(intervall: float = 5, minRssiValue: int = -80):
     starttime = datetime.utcnow()
     devices = list(scanner.scan(intervall))
     endtime = datetime.utcnow()
+    print(devices)
+    for device in devices:
+        if device.rssi > minRssiValue:
+            break
+        devices.pop(device)
+    print(devices)
+    devices.sort(key=lambda device : device.rssi, reverse=True)
+
     print(f"start: {starttime}, end: {endtime}")
     print(f"Found {len(devices)} devices:")
-    devices.sort(key=lambda device : device.rssi, reverse=True)
     for device in devices:
-        if device.rssi < minRssiValue:
-            break
         print(f"mac: {device.addr}; rssi: {device.rssi}; connectable: {device.connectable}")
 
 def main():
