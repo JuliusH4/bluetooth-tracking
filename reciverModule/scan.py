@@ -1,6 +1,6 @@
 from bluepy import btle
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import Flask
 
 HOST = "localhost"
@@ -28,9 +28,9 @@ def scan_devices():
     scans.append({"start": starttime, "end": endtime, "devices": devices})
 
     # remove old scans
-    # TODO: Compre Datetime correctly
-    while (scans[0].start + SCAN_INTERVALL * MAX_STORED_VALUES) > datetime.utcnow():
-        scans.pop()  # TODO: Pop first element
+    max_valid_data_time = timedelta(seconds = SCAN_INTERVALL * MAX_STORED_VALUES)
+    while (scans[0].start + max_valid_data_time ) > datetime.utcnow():
+        scans.pop(0)
 
     # logging
     devices.sort(key=lambda device: device.rssi, reverse=True)
