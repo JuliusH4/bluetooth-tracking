@@ -11,3 +11,31 @@ This code is separated into reciver modules (RM) and the hub (HB). The RM are sc
 * bluepy (https://github.com/IanHarvey/bluepy)
 * Flask
 > Dependencies are downloaded and installt automatically, if you are using Docker.
+
+# Run Reciving Module on Raspberry Pi
+Basic config
+* Install RaspberryPi OS
+* Config wpa_supplicant.conf
+```
+country=DE # Your 2-digit country code
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+network={
+    ssid="YOUR_NETWORK_NAME"
+    psk="YOUR_PASSWORD"
+    key_mgmt=WPA-PSK
+}
+```
+* activate ssh by create an empty file named `ssh`.
+* change login data / install firewall
+* Run `sudo apt-get update` and `sudo apt-get upgrade`.
+Project Specific:
+* clone repository
+* run `curl -fsSL https://get.docker.com -o get-docker.sh`
+* run `sudo sh get-docker.sh`
+* run `sudo usermod -aG docker pi`
+* run `sudo pip3 install docker-compose`
+* config docker with `sudo systemctl enable docker`
+[Further reading](https://bangertech.de/docker-docker-compose-auf-dem-raspberrypi/)
+
+Run
+* run `docker-compose up`
