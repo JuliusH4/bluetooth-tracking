@@ -6,3 +6,7 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 80:3300
+    # https://stackoverflow.com/questions/54165119/how-to-resolve-exceptions-oserror-errno-1-operation-not-permitted-docker-con
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
