@@ -49,8 +49,9 @@ def main():
 
 @app.route('/sensorData', methods=['GET'])
 def get_sensor_data():
-    last_scan = scans[len(scans)]
-    previous_scan = scans[len(scans)-1]
+    last_scan = scans[len(scans)-1]
+    if len(scans)>1:
+        previous_scan = scans[len(scans)-2]
     return {
         "mac_adress": MAC_ADRESS,
         "time": {

@@ -12,7 +12,7 @@ This code is separated into reciver modules (RM) and the hub (HB). The RM are sc
 * Flask
 > Dependencies are downloaded and installt automatically, if you are using Docker.
 
-# Run Reciving Module on Raspberry Pi
+# Run Reciving Module on Raspberry Pi (Docker)
 Basic config
 * Install RaspberryPi OS
 * Config wpa_supplicant.conf
@@ -39,3 +39,9 @@ Project Specific:
 
 Run
 * run `docker-compose up`
+
+
+# Run RM native
+run `sudo apt-get install libglib2.0-dev`
+run `pip3 install --no-cache-dir -r requirements.txt`
+run `python3 scan.py`
