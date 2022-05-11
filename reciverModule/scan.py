@@ -3,7 +3,7 @@ import os
 from datetime import datetime, timedelta
 from flask import Flask
 
-HOST = "localhost"
+HOST = "0.0.0.0"
 PORT = 3300
 SCAN_INTERVALL = 3  # seconds
 MAX_STORED_VALUES = 10
