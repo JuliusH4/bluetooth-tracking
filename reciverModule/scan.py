@@ -49,6 +49,8 @@ def main():
 
 @app.route('/sensorData', methods=['GET'])
 def get_sensor_data():
+    if len(scans) is 0:
+        return "No scans available", 500
     last_scan = scans[len(scans)-1]
     if len(scans)>1:
         previous_scan = scans[len(scans)-2]
