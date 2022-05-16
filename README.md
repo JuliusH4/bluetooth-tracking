@@ -45,3 +45,8 @@ Run
 run `sudo apt-get install libglib2.0-dev`
 run `pip3 install --no-cache-dir -r requirements.txt`
 run `python3 scan.py`
+
+# MQTT Broaker 
+run `sudo apt-get install mosquitto`
+> If you get an error during your install saying “Unable to locate package”, please run this command and then run the above commands again:
+`sudo apt-add-repository ppa:mosquitto-dev/mosquitto-ppa`

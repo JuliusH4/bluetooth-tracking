@@ -1,7 +1,9 @@
-from bluepy import btle
 import os
+import threading
+from bluepy import btle
 from datetime import datetime, timedelta
 from flask import Flask
+import paho.mqtt.client as mqtt
 
 HOST = "0.0.0.0"
 PORT = 3300
@@ -11,12 +13,21 @@ MAX_STORED_VALUES = 10
 MAC_ADRESS = os.popen(
     "sudo cat /sys/kernel/debug/bluetooth/hci0/identity").read().split(' ')[0]
 
+broker_address = "192.168.178.146"
+MQTT_TOPIC = "btt/sensorData"
+
 scanner = btle.Scanner()
 app = Flask(__name__)
+mqtt_client = mqtt.Client(MAC_ADRESS)
 
 # oldes scan will be at the start, newest scan at the end
 scans = []
 
+### Functions ###
+def on_connect(client, userdata, flags, rc):
+    mqtt_client.rc = rc
+
+mqtt_client.on_connect=on_connect
 
 def scan_devices():
     # scan
@@ -41,13 +52,6 @@ def scan_devices():
         print(
             f"mac: {device.addr}; rssi: {device.rssi}; connectable: {device.connectable}")
 
-
-def main():
-    while True:
-        scan_devices()
-
-
-@app.route('/sensorData', methods=['GET'])
 def get_sensor_data():
     if len(scans) is 0:
         return "No scans available", 500
@@ -73,7 +77,33 @@ def get_sensor_data():
         ]
     }
 
+def send_data(data):
+    if mqtt_client.rc == 0:
+        mqtt_client.publish(MQTT_TOPIC, data)
+
+#### Main ###
+
+def runFlask():
+    app.run(host=HOST, port=PORT)
+
+def runScan():
+    while True:
+        scan_devices()
+        send_data(get_sensor_data())
+
+def main():
+    if broker_address:
+        mqtt_client.connect(broker_address)
+    t1 = threading.Thread(target=runFlask()).start()
+    t2 = threading.Thread(target=runScan()).start()
+
+### Flask Routes ###
+
+@app.route('/mqttbroaker', methods=['POST', 'PUT', 'CONNECT', 'OPTIONS'])
+def set_mqttbroaker_ip():
+    mqtt_client.connect(broker_address)
+
+### Run code ###
 
 if __name__ == "__main__":
-    app.run(host=HOST, port=PORT)
     main()
