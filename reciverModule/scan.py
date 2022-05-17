@@ -2,7 +2,7 @@ import os
 from threading import Thread
 import logging
 from datetime import datetime, timedelta
-from flask import Flask
+from flask import Flask, request
 from bluepy import btle
 import paho.mqtt.client as mqtt
 
@@ -13,11 +13,11 @@ HOST = "0.0.0.0"
 PORT = 3300
 SCAN_INTERVALL = 3  # seconds
 MAX_STORED_VALUES = 10
-# read bluetooth identity information and separate mac adress (test bevore space) from it
+# read bluetooth identity information and separate mac adress (text before first space) from it
 MAC_ADDRESS = os.popen(
     "sudo cat /sys/kernel/debug/bluetooth/hci0/identity").read().split(' ')[0]
 
-broker_address = "192.168.178.146"
+broker_address = None
 MQTT_TOPIC = "/btt/sensorData"
 
 scanner = btle.Scanner()
@@ -34,7 +34,11 @@ scans = []
 @app.route('/mqttbroaker', methods=['POST', 'PUT', 'CONNECT', 'OPTIONS'])
 def set_mqttbroaker_ip():
     logger.info("revice http request")
-    # mqtt_client.connect(broker_address)
+    req_address = request.headers.get('x-mqtt-address')
+    logger.info(f"recived Mqttbroker Request: {request}")
+    if req_address:
+        broker_address = req_address
+        connect_to_broker(broker_address)
     return "Success"
 
 
@@ -71,37 +75,49 @@ def scan_devices():
     #     print(
     #         f"mac: {device.addr}; rssi: {device.rssi}; connectable: {device.connectable}")
 
+def format_signals(scans: list) -> list:
+    out = []
+    last_scan = scans[len(scans)-1]
+    if len(scans)>1:
+        previous_scan = scans[len(scans)-2]
+    for device in last_scan["devices"]:
+        #previous_data = previous_scan.devices.get[device.addr] # TODO
+        scandata = {
+            "device_id": device.addr,
+            "is_connectable": device.connectable,
+            "current_rssi": device.rssi,
+            "difference": 0,
+            "average_offset": 0
+        }
+        out.append(scandata)
+    return out
+
+
 def get_sensor_data() -> dict:
     logger.debug(f"Build Data from Signals {scans}")
     if len(scans) is 0:
         logger.debug("Get Sensor Data: No scans available")
-        return none
+        return None
     last_scan = scans[len(scans)-1]
-    if len(scans)>1:
-        previous_scan = scans[len(scans)-2]
     return {
-        "mac_adress": MAC_ADDRESS,
+        "client_id": MAC_ADDRESS,
         "time": {
             "start": str(last_scan['start']),
             "end": str(last_scan['end'])
         },
-        "signals": [
-            {
-                "device_id": "xxx",
-                "current_rssi": -22,
-                "difference": 3  # TODO: Calculate last scan - previous scan
-            },
-            {
-                "device_id": "yyy",
-                "current_rssi": -23
-            }
-        ]
+        "signals": format_signals(scans)
     }
 
 def send_data(data: str):
     logger.info(f"Send Data: {data}")
     mqtt_client.publish(MQTT_TOPIC, data)
 
+def connect_to_broker(address: str):
+    logger.info(f"Connect MQTT Client to {address}")
+    if not address:
+        logger.error("No valid Address privided")
+        return
+    mqtt_client.connect(address)
 
 #### Main ###
 
@@ -115,9 +131,6 @@ def run_scan():
 
 def main():
     logger.info(f"Start main with MAC Adress {MAC_ADDRESS}")
-    if broker_address:
-        logger.info(f"Connect MQTT Client to {broker_address}")
-        mqtt_client.connect(broker_address)
     t1 = Thread(target=run_flask).start()
     t2 = Thread(target=run_scan).start()
 
