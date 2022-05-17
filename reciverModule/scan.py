@@ -28,6 +28,7 @@ max_valid_data_time = timedelta(seconds = SCAN_INTERVALL * MAX_STORED_VALUES)
 # oldest scan will be at the start, newest scan at the end
 scans = []
 
+
 ### Flask Routes ###
 
 @app.route('/mqttbroaker', methods=['POST', 'PUT', 'CONNECT', 'OPTIONS'])
@@ -35,6 +36,7 @@ def set_mqttbroaker_ip():
     logger.info("revice http request")
     # mqtt_client.connect(broker_address)
     return "Success"
+
 
 ### Functions ###
 
@@ -99,6 +101,7 @@ def get_sensor_data() -> dict:
 def send_data(data: str):
     logger.info(f"Send Data: {data}")
     mqtt_client.publish(MQTT_TOPIC, data)
+
 
 #### Main ###
 
