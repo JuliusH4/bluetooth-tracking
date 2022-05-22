@@ -1,8 +1,9 @@
 import express from "express";
 import * as mqtt from "mqtt";
 
-const MQTT_ADDRESS = "";
+const MQTT_ADDRESS = "127.0.0.1";
 const MQTT_TOPIC = "/btt/sensorData";
+const PORT = 3000;
 
 const client: mqtt.MqttClient = mqtt.connect(MQTT_ADDRESS);
 const app = express();
@@ -34,6 +35,6 @@ app.get("/positions", (req, res) => {
   res.send(positions);
 });
 
-app.listen(3000, () => {
-  console.log("The application is listening on port 3000!");
+app.listen(PORT, () => {
+  console.log(`The application is listening on port ${PORT}!`);
 });
