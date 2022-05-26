@@ -43,8 +43,9 @@ Run
 
 # Run RM native
 run `sudo apt-get install libglib2.0-dev`
-run `pip3 install --no-cache-dir -r requirements.txt`
-run `python3 scan.py`
+run `sudo pip3 install --no-cache-dir -r requirements.txt`
+run `sudo python3 scan.py`
+> sudo is required for execution!
 
 # MQTT Broaker 
 run `sudo apt-get install mosquitto`
