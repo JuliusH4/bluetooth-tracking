@@ -8,7 +8,7 @@ This projekt is about tracking devices based on its sending bluetooth signals. R
 All code is developed to be run localy. CAused by this fact, no security and validation features are implemented.
 
 ## Folder structure
-This code is separated into reciver modules (RM), the hub (HB) and a react client. The RM are scanning the surounding bluetooth signals and provides the signal data via MQTT. The HB hosting the MQTT Broaker is subscribing to the RM data topic and combines the data to track the devices. To provide a GUI, the HB is also hosting a http server, where the client webapplication made with [react](https://reactjs.org/) can request the position data.
+This code is separated into reciver modules (RM), the hub (HB) and a react client. The RM are scanning the surounding bluetooth signals and provides the signal data via MQTT. The HB hosting the MQTT Broker is subscribing to the RM data topic and combines the data to track the devices. To provide a GUI, the HB is also hosting a http server, where the client webapplication made with [react](https://reactjs.org/) can request the position data.
 
 ### Dependencies
 * bluepy (https://github.com/IanHarvey/bluepy)
@@ -41,7 +41,7 @@ run `python3 scan.py`
 
 
 # Run Hub
-## MQTT Broaker 
+## MQTT Broker 
 run `sudo apt-get install mosquitto`
 > If you get an error during your install saying “Unable to locate package”, please run the following command and then run the above commands again:  
 `sudo apt-add-repository ppa:mosquitto-dev/mosquitto-ppa`
