@@ -23,7 +23,7 @@ MQTT_TOPIC = "/btt/sensorData"
 scanner = btle.Scanner()
 app = Flask(__name__)
 mqtt_client = mqtt.Client(MAC_ADDRESS)
-max_valid_data_time = timedelta(seconds = SCAN_INTERVALL * MAX_STORED_VALUES)
+max_valid_data_time = timedelta(seconds=SCAN_INTERVALL * MAX_STORED_VALUES)
 
 # oldest scan will be at the start, newest scan at the end
 scans = []
@@ -45,7 +45,8 @@ def set_mqttbroaker_ip():
 ### Functions ###
 
 def is_scan_valid(scan: dict) -> bool:
-    return (scan['start'] + max_valid_data_time ) > datetime.utcnow()
+    return (scan['start'] + max_valid_data_time) > datetime.utcnow()
+
 
 def scan_devices():
     # scan
@@ -55,7 +56,14 @@ def scan_devices():
     endtime = datetime.utcnow()
 
     # safe scan
-    result = {"start": starttime, "end": endtime, "devices": devices}
+    devices.sort(key=lambda device: device.rssi, reverse=True)
+    devices_ = []
+    for device in devices:
+        devices_[device.addr] = {
+            "rssi": {device.rssi},
+            "connectable": {device.connectable}
+        }
+    result = {"start": starttime, "end": endtime, "devices": devices_}
     logger.info(f"Scan results: {result}")
     scans.append(result)
 
@@ -66,8 +74,22 @@ def scan_devices():
         logger.info("Delete old Scan")
         scans.pop(0)
 
+
+def get_average(mac_address: str) -> int:
+    sum = 0
+    count = 0
+    for scan in scans:
+        rssi = scan["devices"].get(mac_address)
+        if rssi:
+            count += 1
+            sum += rssi
+    if count < MAX_STORED_VALUES:
+        return None
+    return int(sum / count)
+
+
 # Print Scan #
-    # devices.sort(key=lambda device: device.rssi, reverse=True)
+    #
     # print("--- New Scan ---")
     # print(f"start: {starttime}, end: {endtime}")
     # print(f"Found {len(devices)} devices:")
@@ -78,6 +100,7 @@ def scan_devices():
 def format_signals(scans: list) -> list:
     out = []
     last_scan = scans[len(scans)-1]
+<<<<<<< HEAD
     previous_scan = None
     if len(scans)>1:
         previous_scan = scans[len(scans)-2]
@@ -93,6 +116,30 @@ def format_signals(scans: list) -> list:
             "average_offset": 0
         }
         out.append(scandata)
+=======
+    if len(scans) > 1:
+        previous_scan = scans[len(scans)-2]
+    for device in last_scan["devices"]:
+        previous_data = previous_scan["devices"].get[device]
+        if previous_data:
+            scandata = {
+                "device_id": device,
+                "is_connectable": device["connectable"],
+                "current_rssi": device["rssi"],
+                "difference": device["rssi"] - previous_data["rssi"],
+                "average_offset": device["rssi"] - get_average(device)
+            }
+            out.append(scandata)
+        else:
+            scandata = {
+                "device_id": device,
+                "is_connectable": device["connectable"],
+                "current_rssi": device["rssi"],
+                "difference": None,
+                "average_offset": None
+            }
+            out.append(scandata)
+>>>>>>> d46b26d1d4f7a125c2f1c9419321b92a472e7a8f
     return out
 
 
@@ -111,9 +158,11 @@ def get_sensor_data() -> dict:
         "signals": format_signals(scans)
     }
 
+
 def send_data(data: str):
     logger.info(f"Send Data: {data}")
     mqtt_client.publish(MQTT_TOPIC, data)
+
 
 def connect_to_broker(address: str):
     logger.info(f"Connect MQTT Client to {address}")
@@ -124,13 +173,17 @@ def connect_to_broker(address: str):
 
 #### Main ###
 
+
 def run_flask():
-    app.run(host=HOST, port=PORT, debug=True, use_reloader=False) #make sure reloade is deactivated
+    # make sure reloade is deactivated
+    app.run(host=HOST, port=PORT, debug=True, use_reloader=False)
+
 
 def run_scan():
     while True:
         scan_devices()
         send_data(str(get_sensor_data()))
+
 
 def main():
     logger.info(f"Start main with MAC Adress {MAC_ADDRESS}")
