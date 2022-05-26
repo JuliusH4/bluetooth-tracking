@@ -6,7 +6,7 @@ from flask import Flask, request
 from bluepy import btle
 import paho.mqtt.client as mqtt
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
 
 HOST = "0.0.0.0"
@@ -78,10 +78,13 @@ def scan_devices():
 def format_signals(scans: list) -> list:
     out = []
     last_scan = scans[len(scans)-1]
+    previous_scan = None
     if len(scans)>1:
         previous_scan = scans[len(scans)-2]
     for device in last_scan["devices"]:
-        #previous_data = previous_scan.devices.get[device.addr] # TODO
+        if previous_scan:
+            previous_data = filter(key=lambda dev: dev.addr == device["addr"], previous_scan["devices"])
+            print(previous_data)
         scandata = {
             "device_id": device.addr,
             "is_connectable": device.connectable,
