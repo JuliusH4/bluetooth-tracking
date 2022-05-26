@@ -6,7 +6,7 @@ from flask import Flask, request
 from bluepy import btle
 import paho.mqtt.client as mqtt
 
-logging.basicConfig(level=logging.ERROR)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 HOST = "0.0.0.0"
@@ -57,11 +57,11 @@ def scan_devices():
 
     # safe scan
     devices.sort(key=lambda device: device.rssi, reverse=True)
-    devices_ = []
+    devices_ = {}
     for device in devices:
         devices_[device.addr] = {
-            "rssi": {device.rssi},
-            "connectable": {device.connectable}
+            "rssi": device.rssi,
+            "connectable": device.connectable
         }
     result = {"start": starttime, "end": endtime, "devices": devices_}
     logger.info(f"Scan results: {result}")
@@ -79,11 +79,13 @@ def get_average(mac_address: str) -> int:
     sum = 0
     count = 0
     for scan in scans:
-        rssi = scan["devices"].get(mac_address)
-        if rssi:
+        device = scan["devices"].get(mac_address)
+        if device:
+            rssi = device["rssi"]
             count += 1
             sum += rssi
-    if count < MAX_STORED_VALUES:
+    if count < MAX_STORED_VALUES - 1:
+        logger.info(f"Not enough Values: {count}")
         return None
     return int(sum / count)
 
@@ -100,46 +102,30 @@ def get_average(mac_address: str) -> int:
 def format_signals(scans: list) -> list:
     out = []
     last_scan = scans[len(scans)-1]
-<<<<<<< HEAD
     previous_scan = None
-    if len(scans)>1:
-        previous_scan = scans[len(scans)-2]
-    for device in last_scan["devices"]:
-        if previous_scan:
-            previous_data = filter(key=lambda dev: dev.addr == device["addr"], previous_scan["devices"])
-            print(previous_data)
-        scandata = {
-            "device_id": device.addr,
-            "is_connectable": device.connectable,
-            "current_rssi": device.rssi,
-            "difference": 0,
-            "average_offset": 0
-        }
-        out.append(scandata)
-=======
     if len(scans) > 1:
         previous_scan = scans[len(scans)-2]
     for device in last_scan["devices"]:
-        previous_data = previous_scan["devices"].get[device]
-        if previous_data:
-            scandata = {
+        device_ = last_scan["devices"][device]
+        scandata = {
                 "device_id": device,
-                "is_connectable": device["connectable"],
-                "current_rssi": device["rssi"],
-                "difference": device["rssi"] - previous_data["rssi"],
-                "average_offset": device["rssi"] - get_average(device)
-            }
-            out.append(scandata)
+                "is_connectable": device_["connectable"],
+                "current_rssi": device_["rssi"],
+            	}
+        if previous_scan:
+            previous_data = previous_scan["devices"].get(device)
+            if previous_data:
+                scandata["difference"] = device_["rssi"] - previous_data["rssi"]
+            else:
+                scandata["difference"] = None
         else:
-            scandata = {
-                "device_id": device,
-                "is_connectable": device["connectable"],
-                "current_rssi": device["rssi"],
-                "difference": None,
-                "average_offset": None
-            }
-            out.append(scandata)
->>>>>>> d46b26d1d4f7a125c2f1c9419321b92a472e7a8f
+            scandata["difference"] = None
+        avg = get_average(device)
+        if avg:
+            scandata["average_offset"] = device_["rssi"] - avg 
+        else:
+            scandata["average_offset"] = None
+        out.append(scandata)
     return out
 
 
