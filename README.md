@@ -35,10 +35,11 @@ network={
 * Run `sudo apt-get update` and `sudo apt-get upgrade`.  
 * clone repository
 
-run `sudo apt-get install libglib2.0-dev` (required for bluepy lib)  
-run `pip3 install --no-cache-dir -r requirements.txt`  
-run `python3 scan.py`
-
+# Run RM native
+run `sudo apt-get install libglib2.0-dev`(required for bluepy lib  
+run `sudo pip3 install --no-cache-dir -r requirements.txt`
+run `sudo python3 scan.py`
+> sudo is required for execution!
 
 # Run Hub
 ## MQTT Broker 
