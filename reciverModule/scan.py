@@ -108,21 +108,22 @@ def format_signals(scans: list) -> list:
     for device in last_scan["devices"]:
         device_ = last_scan["devices"][device]
         scandata = {
-                "device_id": device,
-                "is_connectable": device_["connectable"],
-                "current_rssi": device_["rssi"],
-            	}
+            "device_id": device,
+            "is_connectable": device_["connectable"],
+            "current_rssi": device_["rssi"],
+        }
         if previous_scan:
             previous_data = previous_scan["devices"].get(device)
             if previous_data:
-                scandata["difference"] = device_["rssi"] - previous_data["rssi"]
+                scandata["difference"] = device_[
+                    "rssi"] - previous_data["rssi"]
             else:
                 scandata["difference"] = None
         else:
             scandata["difference"] = None
         avg = get_average(device)
         if avg:
-            scandata["average_offset"] = device_["rssi"] - avg 
+            scandata["average_offset"] = device_["rssi"] - avg
         else:
             scandata["average_offset"] = None
         out.append(scandata)
