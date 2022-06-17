@@ -1,7 +1,7 @@
 import express from "express";
 import * as mqtt from "mqtt";
 
-const MQTT_ADDRESS = "127.0.0.1";
+const MQTT_ADDRESS = "mqtt://127.0.0.1";
 const MQTT_TOPIC = "/btt/sensorData";
 const PORT = 3000;
 
