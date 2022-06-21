@@ -1,6 +1,7 @@
 import os
 from threading import Thread
 import logging
+import json
 from datetime import datetime, timedelta
 from flask import Flask, request
 from bluepy import btle
@@ -148,7 +149,7 @@ def get_sensor_data() -> dict:
 
 def send_data(data: str):
     logger.info(f"Send Data: {data}")
-    mqtt_client.publish(MQTT_TOPIC, data)
+    mqtt_client.publish(MQTT_TOPIC, json.dumps(data, separators=(",", ":")))
 
 
 def connect_to_broker(address: str):
