@@ -1,7 +1,7 @@
 import { Distance } from "./distance";
 import { LotStraight } from "./lotStraight";
 import { Position } from "./position";
-import { RecivingModules } from "./RecivingModules";
+import { RecivingModules } from "./recivingModules";
 
 interface Signal {
   time: {
@@ -78,7 +78,7 @@ export class Device {
       }
     }
     // TODO Update Calculation to use all straights
-    
+
     return straights[0].getIntersection(straights[1]);
   }
 }
