@@ -22,7 +22,8 @@ client.on("connect", () => {
 });
 
 client.on("message", (topic: string, message_: Buffer) => {
-  const message = JSON.parse(message_.toString())
+  const message_str = message_.toString().replace('\'', '"')
+  const message = JSON.parse(message_str)
   console.info("recived MQTT message", topic, message);
   deviceHandler.setSignals(message);
 });
