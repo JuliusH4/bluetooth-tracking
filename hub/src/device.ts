@@ -1,3 +1,5 @@
+import { Distance } from "./distance";
+import { LotStraight } from "./lotStraight";
 import { Position } from "./position";
 import { RecivingModules } from "./RecivingModules";
 
@@ -52,16 +54,31 @@ export class Device {
   isValid(): boolean {
     // checks if enough signals are available
     return Object.keys(this.signals).length >= this.minSignals;
-    Object
   }
 
   getPosition(): Position {
+    let straights = [];
     this.cleanSignals();
     if (!this.isValid()) {
       throw new Error("Not enough valid signals");
     }
     const modules = this.recivingModules.getModules()
-    // TODO
-    return new Position(0, 0);
+    let recivingModules = Object.keys(this.signals)
+    while (recivingModules.length > 1) {
+      const startModule = recivingModules.pop()
+      if (startModule == undefined) {throw new Error} // this is just for just for typescript syntax - startModule will not be undefined, caused by the while condition
+      const RSSIStart = this.signals[startModule].currentRssi
+      for (const module in recivingModules) {
+        const RSSIEnd = this.signals[module].currentRssi
+        const signalRelation = RSSIStart / RSSIEnd
+        const distance = new Distance(modules[startModule], modules[module]);
+        const lotPoint = distance.partialPoint(signalRelation)
+        const gradient = distance.getGradient();
+        straights.push(new LotStraight(gradient, lotPoint))
+      }
+    }
+    // TODO Update Calculation to use all straights
+    
+    return straights[0].getIntersection(straights[1]);
   }
 }

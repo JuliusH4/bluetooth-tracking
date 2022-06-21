@@ -32,7 +32,12 @@ export class DeviceHandler {
         let out: DevicePositions = {}
         for (const device_ in this.devices) {
             const device = this.devices[device_]
-            out[device.macAddress] = device.getPosition()
+            try {
+                out[device.macAddress] = device.getPosition()
+            }
+            catch {
+                console.error("Not enough Signals for device", device.macAddress)
+            }
         }
         return out;
     }

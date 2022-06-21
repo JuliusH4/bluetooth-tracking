@@ -17,6 +17,11 @@ This code is separated into reciver modules (RM), the hub (HB) and a react clien
 * Express
 * paho
 
+#### React
+* styled components
+> See also  https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
+
+
 # Run Reciving Module (on Raspberry Pi)
 Basic config
 * Install RaspberryPi OS
