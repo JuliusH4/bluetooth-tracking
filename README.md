@@ -16,11 +16,12 @@ All distances should be in centimeters (to be checked...). Origin of the API End
 * bluepy (https://github.com/IanHarvey/bluepy)
 * Flask
 * Mosquitto
-* Express
+* Express + core
 * paho
 
 #### React
 * styled components
+* axios
 > See also  https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
 
 
