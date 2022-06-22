@@ -53,7 +53,8 @@ run `sudo apt-get install mosquitto`
 `sudo apt-add-repository ppa:mosquitto-dev/mosquitto-ppa`
 
 ## Run Express Server
-run `npm install`  
+run `npm install`
+create a file called `modules.json` in the `/hub` directory containing an empyt json syntax `{}`.
 run `npm start`
 
 # Run client

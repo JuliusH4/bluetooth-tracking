@@ -53,6 +53,7 @@ export class Device {
 
   isValid(): boolean {
     // checks if enough signals are available
+    console.info("Current Signals", this.signals)
     return Object.keys(this.signals).length >= this.minSignals;
   }
 

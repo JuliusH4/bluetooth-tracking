@@ -2,6 +2,8 @@ import express from "express";
 import * as mqtt from "mqtt";
 
 import { DeviceHandler } from "./deviceHandler"
+import { Position } from "./position";
+import { RecivingModules } from "./recivingModules";
 
 const MQTT_ADDRESS = "mqtt://127.0.0.1";
 const MQTT_TOPIC = "/btt/sensorData";
@@ -28,9 +30,18 @@ client.on("message", (topic: string, message_: Buffer) => {
   deviceHandler.setSignals(message);
 });
 
-app.get("/sensor", (req, res) => {
-  const params = req.params;
-  // TODO
+interface Query {
+  macAddress: string;
+  xOffset: number;
+  yOffset: number;
+};
+
+app.post("/sensor", (req, res) => {
+  const query = req.query as unknown as Query;
+  console.log(query)
+  const rm = new RecivingModules
+  const position = new Position(query.xOffset, query.yOffset)
+  rm.setModule(query.macAddress, position)
   res.send("Success");
 });
 
