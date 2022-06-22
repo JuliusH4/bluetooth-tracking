@@ -68,7 +68,9 @@ export class Device {
     let recivingModules = Object.keys(this.signals)
     while (recivingModules.length > 1) {
       const startModule = recivingModules.pop()
-      if (startModule == undefined) {throw new Error} // this is just for just for typescript syntax - startModule will not be undefined, caused by the while condition
+      if (startModule == undefined) {
+        console.error("startModule is not defined")
+        throw new Error} // this is just for just for typescript syntax - startModule will not be undefined, caused by the while condition
       const RSSIStart = this.signals[startModule].currentRssi
       for (const module in recivingModules) {
         const RSSIEnd = this.signals[module].currentRssi
