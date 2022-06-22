@@ -147,9 +147,10 @@ def get_sensor_data() -> dict:
     }
 
 
-def send_data(data: str):
-    logger.info(f"Send Data: {data}")
-    mqtt_client.publish(MQTT_TOPIC, json.dumps(data, separators=(",", ":")))
+def send_data(data: dict):
+    out = json.dumps(data, sort_keys=True)
+    logger.info(f"Send Data: {data}\n{out}")
+    mqtt_client.publish(MQTT_TOPIC, out)
 
 
 def connect_to_broker(address: str):
@@ -170,7 +171,7 @@ def run_flask():
 def run_scan():
     while True:
         scan_devices()
-        send_data(str(get_sensor_data()))
+        send_data(get_sensor_data())
 
 
 def main():
