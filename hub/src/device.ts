@@ -75,8 +75,8 @@ export class Device {
         throw new Error} // this is just for just for typescript syntax - startModule will not be undefined, caused by the while condition
       const RSSIStart = this.signals[startModule].currentRssi
       console.log("start RSSI", RSSIStart)
-      for (const module in recivingModules) {
-        console.log("Endmodule", module)
+      for (const index in recivingModules) {
+        const module = recivingModules[index]
         console.log(this.signals[module])
         const RSSIEnd = this.signals[module].currentRssi
         const signalRelation = RSSIStart / RSSIEnd
