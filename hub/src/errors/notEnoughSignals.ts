@@ -1,5 +1,5 @@
 
-export class NotEnoughsignals {
+export class NotEnoughSignals {
     constructor(message: string) {
       const error = Error(message);
   
@@ -15,7 +15,7 @@ export class NotEnoughsignals {
         }
       });
       // capture where error occured
-      Error.captureStackTrace(error, NotEnoughsignals);
+      Error.captureStackTrace(error, NotEnoughSignals);
       return error;
     }
   }

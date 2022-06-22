@@ -1,5 +1,5 @@
 import { Distance } from "./distance";
-import { NotEnoughsignals } from "./errors/notEnoughSignals";
+import { NotEnoughSignals } from "./errors/notEnoughSignals";
 import { LotStraight } from "./lotStraight";
 import { Position } from "./position";
 import { RecivingModules } from "./recivingModules";
@@ -62,7 +62,7 @@ export class Device {
     let straights = [];
     this.cleanSignals();
     if (!this.isValid()) {
-      throw new NotEnoughsignals("Not enought signals for calculation");
+      throw new NotEnoughSignals("Not enought signals for calculation");
     }
     console.log("calculation position for device", this.macAddress)
     const modules = this.recivingModules.getModules()
@@ -80,7 +80,8 @@ export class Device {
         console.log(this.signals[module])
         const RSSIEnd = this.signals[module].currentRssi
         const signalRelation = RSSIStart / RSSIEnd
-        const distance = new Distance(modules[startModule], modules[module]);
+        console.log(modules[startModule], modules[module])
+        const distance = new Distance(modules[startModule], modules[module]); 
         const lotPoint = distance.partialPoint(signalRelation)
         const gradient = distance.getGradient();
         straights.push(new LotStraight(gradient, lotPoint))
