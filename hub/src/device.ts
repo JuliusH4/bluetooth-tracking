@@ -64,10 +64,12 @@ export class Device {
     if (!this.isValid()) {
       throw new NotEnoughsignals("Not enought signals for calculation");
     }
+    console.log("calculation position for device", this.macAddress)
     const modules = this.recivingModules.getModules()
     let recivingModules = Object.keys(this.signals)
     while (recivingModules.length > 1) {
       const startModule = recivingModules.pop()
+      console.log("set Startmodule", startModule)
       if (startModule == undefined) {
         console.error("startModule is not defined")
         throw new Error} // this is just for just for typescript syntax - startModule will not be undefined, caused by the while condition
@@ -82,7 +84,7 @@ export class Device {
       }
     }
     // TODO Update Calculation to use all straights
-
+    console.log("calculated Straights", straights)
     return straights[0].getIntersection(straights[1]);
   }
 }
