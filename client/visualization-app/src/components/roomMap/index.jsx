@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Canvas from './canvas';
 import styled from 'styled-components'
+const axios = require('axios');
 
 
 const StyledButton = styled.button`
@@ -19,24 +20,12 @@ const RoomMap = props => {
   const [ hubCoordinates, setHubCoordinates] = useState([]);
   const [ moduleCoordinates, setModuleCoordinates] = useState([]);
 
-  const dataURI = "http://192.168.178.146:3000"
-
-  const requestOptions = {
-    method: 'GET',
-    redirect: 'follow'
-  };
+  const dataURI = "http://192.168.178.146:3330"
 
   const updatePositions = () => {
     const url = dataURI + "/positions"
-    var requestOptions = {
-      method: 'GET',
-      redirect: 'follow'
-    };
-    
-    fetch("192.168.178.146:3000/positions", requestOptions)
-      .then(response => response.text())
-      .then(result => console.log(result))
-      .catch(error => console.log('error', error));
+    axios.get(url)
+        .then(response => console.log(response));
   }
 
   useEffect(() => {

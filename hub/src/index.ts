@@ -4,6 +4,7 @@ import * as mqtt from "mqtt";
 import { DeviceHandler } from "./deviceHandler"
 import { Position } from "./position";
 import { RecivingModules } from "./recivingModules";
+var cors = require('cors');
 
 const MQTT_ADDRESS = "mqtt://127.0.0.1";
 const MQTT_TOPIC = "/btt/sensorData";
@@ -11,6 +12,8 @@ const PORT = 3330;
 
 const client: mqtt.MqttClient = mqtt.connect(MQTT_ADDRESS);
 const app = express();
+
+app.use(cors())
 
 let deviceHandler = new DeviceHandler();
 
