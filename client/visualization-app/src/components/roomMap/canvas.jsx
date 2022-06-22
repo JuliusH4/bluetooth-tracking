@@ -19,7 +19,7 @@ const Canvas = props => {
     context.beginPath()
     positions.forEach(position => {
       console.log("draw", position)
-      context.arc(position.x, position.y, radius, 0, 2*Math.PI)
+      context.arc(parseInt(position.x), parseInt(position.y), radius, 0, 2*Math.PI)
       context.fill()
     });
   }
@@ -28,7 +28,7 @@ const Canvas = props => {
 
     const canvas = canvasRef.current
     const context = canvas.getContext('2d')
-    draw(context, props.devicePositions, "#0000FF", deviceRadius)
+    draw(context, Object.values(props.devicePositions), "#0000FF", deviceRadius)
     draw(context, props.hubPositions, "#FF0000", hubRadius)
     draw(context, props.modulePositions, "#00FFFF", moduleRadius)
 

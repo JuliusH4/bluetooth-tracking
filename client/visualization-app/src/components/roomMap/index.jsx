@@ -16,7 +16,7 @@ border-radius: 3px;
 
 const RoomMap = props => {
 
-  const [ deviceCoordinates, setDeviceCoordinates] = useState([]);
+  const [ deviceCoordinates, setDeviceCoordinates] = useState({});
   const [ hubCoordinates, setHubCoordinates] = useState([]);
   const [ moduleCoordinates, setModuleCoordinates] = useState([]);
 
@@ -25,13 +25,15 @@ const RoomMap = props => {
   const updatePositions = () => {
     const url = dataURI + "/positions"
     axios.get(url)
-        .then(response => console.log(response));
+        .then(response => {
+          console.log("update positions", response)
+          const data = response.data
+          setDeviceCoordinates(data)
+        }
+        );
   }
 
   useEffect(() => {
-    const coords1 = {x: 100, y: 200}
-    const coords2 = {x: 50, y: 300}
-    setDeviceCoordinates([coords1, coords2])
     setHubCoordinates([{x: 400, y:100}])
     setModuleCoordinates([{x: 200,y: 400}, {x:700, y: 40}])
   }, [])
