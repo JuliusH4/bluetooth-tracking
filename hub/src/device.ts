@@ -81,6 +81,7 @@ export class Device {
         const RSSIEnd = this.signals[module].currentRssi
         const signalRelation = RSSIStart / RSSIEnd
         console.log(modules[startModule], modules[module])
+        console.log(modules, startModule, module)
         const distance = new Distance(modules[startModule], modules[module]); 
         const lotPoint = distance.partialPoint(signalRelation)
         const gradient = distance.getGradient();
