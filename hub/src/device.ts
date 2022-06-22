@@ -1,4 +1,5 @@
 import { Distance } from "./distance";
+import { NotEnoughsignals } from "./errors/notEnoughSignals";
 import { LotStraight } from "./lotStraight";
 import { Position } from "./position";
 import { RecivingModules } from "./recivingModules";
@@ -61,7 +62,7 @@ export class Device {
     let straights = [];
     this.cleanSignals();
     if (!this.isValid()) {
-      throw new Error("Not enough valid signals");
+      throw new NotEnoughsignals("Not enought signals for calculation");
     }
     const modules = this.recivingModules.getModules()
     let recivingModules = Object.keys(this.signals)

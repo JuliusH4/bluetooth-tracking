@@ -1,4 +1,5 @@
 import { Device } from "./device";
+import { NotEnoughsignals } from "./errors/notEnoughSignals";
 import { Position } from "./position";
 
 interface DevicePositions {
@@ -35,7 +36,7 @@ export class DeviceHandler {
             try {
                 out[device.macAddress] = device.getPosition()
             }
-            catch {
+            catch (NotEnoughsignals) {
                 console.error("Not enough Signals for device", device.macAddress)
             }
         }
