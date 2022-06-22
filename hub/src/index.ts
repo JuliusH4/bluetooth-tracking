@@ -1,10 +1,10 @@
 import express from "express";
 import * as mqtt from "mqtt";
+import cors from 'cors';
 
 import { DeviceHandler } from "./deviceHandler"
 import { Position } from "./position";
 import { RecivingModules } from "./recivingModules";
-var cors = require('cors');
 
 const MQTT_ADDRESS = "mqtt://127.0.0.1";
 const MQTT_TOPIC = "/btt/sensorData";
@@ -51,6 +51,11 @@ app.post("/sensor", (req, res) => {
 app.get("/positions", (req, res) => {
   const positions = deviceHandler.getPositions();
   res.send(positions);
+});
+
+app.get("/modules", (req, res) => {
+  const rm = new RecivingModules
+  res.send(rm.getModules());
 });
 
 app.listen(PORT, () => {
