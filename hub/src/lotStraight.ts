@@ -21,6 +21,7 @@ export class LotStraight {
         const x1 = straight.point.x
         const x = -y0+ y1+ (((m0*x1)-x0*m1)/(m0*m1))*((m0*m1)/(m0-m1));
         const y = -(1/m0)*(x-x0)+y0
+        console.log(x, y)
         return new Position(x, y)
     }
 

@@ -25,7 +25,10 @@ export class Distance {
     getGradient(): number {
     // geman: Steigung
         const deltaX = this.end.x - this.start.x
-        const deltaY = this.end.y - this.end.y
+        const deltaY = this.end.y - this.start.y
+        if (deltaX === 0) {
+            return 0
+        }
         return deltaY / deltaX;
     }
 
