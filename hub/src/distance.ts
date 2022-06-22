@@ -31,7 +31,4 @@ export class Distance {
         }
         return deltaY / deltaX;
     }
-
-
 }
-

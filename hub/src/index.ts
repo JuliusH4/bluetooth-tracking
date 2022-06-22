@@ -7,7 +7,7 @@ import { RecivingModules } from "./recivingModules";
 
 const MQTT_ADDRESS = "mqtt://127.0.0.1";
 const MQTT_TOPIC = "/btt/sensorData";
-const PORT = 3000;
+const PORT = 3330;
 
 const client: mqtt.MqttClient = mqtt.connect(MQTT_ADDRESS);
 const app = express();
