@@ -18,7 +18,7 @@ export class RecivingModules {
     fs.readFile(this.path, (err: any, data: any) => {
       if (err) throw err;
       const modules = JSON.parse(data);
-      console.log("Read Recivin Module Data", modules);
+      console.log("Read Reciving Module Data", modules);
       for (const module_ in modules) {
         const module = modules[module_]
         out[module.id] = new Position(module.x, module.y);

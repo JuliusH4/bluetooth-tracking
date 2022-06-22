@@ -36,8 +36,12 @@ export class DeviceHandler {
             try {
                 out[device.macAddress] = device.getPosition()
             }
-            catch (NotEnoughsignals) {
-                console.error("Not enough Signals for device", device.macAddress)
+            catch (e) {
+                if (e instanceof NotEnoughsignals) {
+                    console.error("Not enough Signals for device", device.macAddress)
+                } else {
+                   console.error(e)
+                }
             }
         }
         return out;
